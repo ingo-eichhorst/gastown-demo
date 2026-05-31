@@ -8,4 +8,9 @@ venv/
 dist/
 build/
 tasks.json
+# Gas Town
 .runtime/
+.logs/
+state.json
+CLAUDE.md
+CLAUDE.local.md
