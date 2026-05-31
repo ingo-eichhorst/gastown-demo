@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 from . import __version__
-from .core import add_task, complete_task, load_tasks, save_tasks
+from .core import add_task, complete_task, load_tasks, reopen_task, save_tasks
 
 
 def default_store() -> Path:
@@ -49,6 +49,15 @@ def cmd_done(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_reopen(args: argparse.Namespace) -> int:
+    store = default_store()
+    tasks = load_tasks(store)
+    task = reopen_task(tasks, args.id)
+    save_tasks(store, tasks)
+    print(f"reopened #{task.id}: {task.title}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="gtdemo", description="A tiny task-manager CLI.")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
@@ -64,6 +73,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_done = sub.add_parser("done", help="mark a task as done")
     p_done.add_argument("id", type=int, help="the task id")
     p_done.set_defaults(func=cmd_done)
+
+    p_reopen = sub.add_parser("reopen", help="reopen a completed task")
+    p_reopen.add_argument("id", type=int, help="the task id")
+    p_reopen.set_defaults(func=cmd_reopen)
 
     return parser
 

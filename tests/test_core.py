@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from gastown_demo.core import Task, add_task, complete_task, load_tasks, save_tasks
+from gastown_demo.core import Task, add_task, complete_task, load_tasks, reopen_task, save_tasks
 
 
 def test_add_task_assigns_incrementing_ids():
@@ -27,6 +27,17 @@ def test_complete_task_sets_done():
 def test_complete_unknown_task_raises():
     with pytest.raises(KeyError):
         complete_task([], 99)
+
+
+def test_reopen_task_clears_done():
+    tasks = [Task(id=1, title="demo", done=True)]
+    reopen_task(tasks, 1)
+    assert tasks[0].done is False
+
+
+def test_reopen_unknown_task_raises():
+    with pytest.raises(KeyError):
+        reopen_task([], 99)
 
 
 def test_save_and_load_roundtrip(tmp_path: Path):

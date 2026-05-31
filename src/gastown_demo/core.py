@@ -40,6 +40,15 @@ def complete_task(tasks: list[Task], task_id: int) -> Task:
     raise KeyError(f"no task with id {task_id}")
 
 
+def reopen_task(tasks: list[Task], task_id: int) -> Task:
+    """Mark a completed task as not done. Raises KeyError if not found."""
+    for task in tasks:
+        if task.id == task_id:
+            task.done = False
+            return task
+    raise KeyError(f"no task with id {task_id}")
+
+
 def load_tasks(path: Path) -> list[Task]:
     """Load tasks from a JSON file. Returns an empty list if the file is absent."""
     if not path.exists():
