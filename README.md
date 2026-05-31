@@ -59,6 +59,39 @@ CLI stays a thin shell. New behaviour is added by writing a function in `core`
 - export to Markdown
 - colourised output
 
+## Contributing
+
+### Report an issue
+
+Open a GitHub issue with a short description of the bug or feature request.
+Include the output of `gtdemo list` if relevant.
+
+### Set up for development
+
+```bash
+git clone <repo-url>
+cd gastown-demo
+pip install -e ".[dev]"
+```
+
+### Run tests locally
+
+```bash
+ruff check .   # lint
+pytest -q      # tests
+```
+
+Both gates must pass before submitting a pull request — CI enforces the same
+checks on every push.
+
+### Open a pull request
+
+1. Fork the repo and create a branch (`git checkout -b my-feature`).
+2. Make your changes with tests where appropriate.
+3. Run `ruff check .` and `pytest -q` and confirm both pass.
+4. Open a pull request against `main` with a clear description of what changed
+   and why.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
