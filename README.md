@@ -1,5 +1,10 @@
 # gastown-demo
 
+![CI](https://github.com/ingo-eichhorst/gastown-demo/actions/workflows/ci.yml/badge.svg)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A tiny, extensible task-manager CLI — demo app for the Gas Town talk. Small
 enough to read in 10 minutes, structured so coding agents can add features
 one at a time, with tests and quality gates already in place.
