@@ -1,5 +1,11 @@
 # gastown-demo
 
+[![PyPI version](https://img.shields.io/pypi/v/gastown-demo.svg)](https://pypi.org/project/gastown-demo/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/gastown-demo.svg)](https://pypi.org/project/gastown-demo/)
+[![Python versions](https://img.shields.io/pypi/pyversions/gastown-demo.svg)](https://pypi.org/project/gastown-demo/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/ingo-eichhorst/gastown-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/ingo-eichhorst/gastown-demo/actions/workflows/ci.yml)
+
 A tiny, extensible task-manager CLI — demo app for the Gas Town talk. Small
 enough to read in 10 minutes, structured so coding agents can add features
 one at a time, with tests and quality gates already in place.
