@@ -5,35 +5,73 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A tiny, extensible task-manager CLI — demo app for the Gas Town talk. Small
-enough to read in 10 minutes, structured so coding agents can add features
-one at a time, with tests and quality gates already in place.
+A task manager you can start using in 30 seconds, right from your terminal.
 
-## Install
+`gtdemo` keeps a todo list in a plain JSON file — no account, no cloud, no friction. Type a task, check it off, move on.
+
+It's also the demo codebase for the [Gas Town](https://github.com/universalagents/gastown) talk: small enough to read in 10 minutes, structured so AI coding agents can add features one at a time, with tests and quality gates already wired up.
+
+---
+
+## Quickstart
+
+**Install** (Python 3.10+ required):
 
 ```bash
 pip install -e ".[dev]"
 ```
 
-Requires Python 3.10+. Creates the `gtdemo` entry point in your environment.
+This creates the `gtdemo` command in your current environment.
 
-## Use
+**Try it:**
 
-```bash
-gtdemo add "write the slides"
-gtdemo add "rehearse the talk"
-gtdemo list
-gtdemo done 1
-gtdemo reopen 1
-gtdemo list
+```
+$ gtdemo add "write the slides"
+added #1: write the slides
+
+$ gtdemo add "rehearse the talk"
+added #2: rehearse the talk
+
+$ gtdemo list
+[ ] #1 write the slides
+[ ] #2 rehearse the talk
+
+$ gtdemo done 1
+completed #1: write the slides
+
+$ gtdemo list
+[x] #1 write the slides
+[ ] #2 rehearse the talk
+
+$ gtdemo reopen 1
+reopened #1: write the slides
 ```
 
-Tasks are stored in `tasks.json` in the current directory. Override the
-location with the `GTDEMO_STORE` environment variable:
+---
+
+## Commands
+
+| Command | What it does |
+|---------|-------------|
+| `gtdemo add "your task"` | Add a new task |
+| `gtdemo list` | Show all tasks (open and done) |
+| `gtdemo done <id>` | Mark a task as completed |
+| `gtdemo reopen <id>` | Reopen a completed task |
+| `gtdemo --version` | Show the installed version |
+
+---
+
+## Where tasks are stored
+
+Tasks are saved to `tasks.json` in the current directory. To use a different file, set the `GTDEMO_STORE` environment variable:
 
 ```bash
-GTDEMO_STORE=/tmp/my-tasks.json gtdemo list
+GTDEMO_STORE=~/work/tasks.json gtdemo list
 ```
+
+This works per-project: `cd` into a folder and run `gtdemo` — each folder gets its own task list.
+
+---
 
 ## Architecture
 
@@ -89,6 +127,27 @@ save_tasks(path, tasks)   # list[Task] → JSON
 print(...)                # CLI output
 ```
 
+---
+
+## Ideas to extend
+
+Good first contributions — each follows the three-step extension pattern above:
+
+| Feature | `core.py` change | `cli.py` change |
+|---------|-----------------|-----------------|
+| `remove <id>` | `remove_task()` modelled on `complete_task()` | `cmd_remove()` + `remove` subparser |
+| `--priority high` | add `priority` field to `Task`; update `add_task()` | `--priority` arg on `add`; sort in `cmd_list()` |
+| Due dates + `overdue` | add `due` field to `Task`; add `overdue_tasks()` filter | `overdue` subparser |
+| Tags + `list --tag` | add `tags: list[str]` to `Task` | `--tag` arg on `list` subparser |
+| `search <text>` | `search_tasks()` substring match on `task.title` | `search` subparser |
+| Markdown export | `export_markdown()` returns a string | `export` subparser; print to stdout |
+| Coloured output | no change | wrap output in ANSI codes in `cmd_list()` |
+
+Already implemented: `reopen` — see `reopen_task()` in `core.py` and
+`cmd_reopen()` in `cli.py`.
+
+---
+
 ## Develop
 
 ```bash
@@ -111,22 +170,7 @@ pytest -q --tb=short -x
 CI (`.github/workflows/ci.yml`) runs `ruff check` then `pytest -q` on every
 push and pull request. Both must pass before merging.
 
-## Ideas to extend
-
-Good first contributions — each follows the three-step extension pattern above:
-
-| Feature | `core.py` change | `cli.py` change |
-|---------|-----------------|-----------------|
-| `remove <id>` | `remove_task()` modelled on `complete_task()` | `cmd_remove()` + `remove` subparser |
-| `--priority high` | add `priority` field to `Task`; update `add_task()` | `--priority` arg on `add`; sort in `cmd_list()` |
-| Due dates + `overdue` | add `due` field to `Task`; add `overdue_tasks()` filter | `overdue` subparser |
-| Tags + `list --tag` | add `tags: list[str]` to `Task` | `--tag` arg on `list` subparser |
-| `search <text>` | `search_tasks()` substring match on `task.title` | `search` subparser |
-| Markdown export | `export_markdown()` returns a string | `export` subparser; print to stdout |
-| Coloured output | no change | wrap output in ANSI codes in `cmd_list()` |
-
-Already implemented: `reopen` — see `reopen_task()` in `core.py` and
-`cmd_reopen()` in `cli.py`.
+---
 
 ## Contributing
 
@@ -159,6 +203,8 @@ pip install -e ".[dev]"
 ### Filing bugs
 
 Open a GitHub issue with the output of `gtdemo list` if relevant.
+
+---
 
 ## License
 
