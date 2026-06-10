@@ -1,14 +1,16 @@
 # gastown-demo
 
-A tiny, extensible task-manager CLI. It is the **demo app for the Gas Town talk**:
-small enough to read in a minute, structured so that coding agents can pick up
-features one at a time, with tests and quality gates already in place.
+A tiny, extensible task-manager CLI — demo app for the Gas Town talk. Small
+enough to read in 10 minutes, structured so coding agents can add features
+one at a time, with tests and quality gates already in place.
 
 ## Install
 
 ```bash
 pip install -e ".[dev]"
 ```
+
+Requires Python 3.10+. Creates the `gtdemo` entry point in your environment.
 
 ## Use
 
@@ -17,80 +19,141 @@ gtdemo add "write the slides"
 gtdemo add "rehearse the talk"
 gtdemo list
 gtdemo done 1
+gtdemo reopen 1
 gtdemo list
 ```
 
-Tasks are stored in `tasks.json` in the current directory. Override the location
-with the `GTDEMO_STORE` environment variable.
+Tasks are stored in `tasks.json` in the current directory. Override the
+location with the `GTDEMO_STORE` environment variable:
+
+```bash
+GTDEMO_STORE=/tmp/my-tasks.json gtdemo list
+```
+
+## Architecture
+
+The codebase has two layers kept deliberately separate:
+
+```
+src/gastown_demo/
+  core.py   # pure task logic + JSON store — no I/O except the store file
+  cli.py    # argparse layer; calls core, prints output, returns exit codes
+tests/
+  test_core.py   # unit tests for pure functions
+  test_cli.py    # integration tests driven through main()
+```
+
+**Data model.** `core.Task` is the only domain object:
+
+```python
+@dataclass
+class Task:
+    id: int
+    title: str
+    done: bool = False
+```
+
+All business logic in `core.py` operates on `list[Task]` using pure functions.
+The CLI in `cli.py` loads from disk, delegates to a core function, saves, and
+prints — nothing more.
+
+**Extension pattern.** Every new command follows three steps:
+
+1. Add a function to `core.py` that takes `list[Task]` and returns or raises
+2. Cover it with tests in `test_core.py`
+3. Add a `cmd_*` handler and a `sub.add_parser(...)` block in `cli.py`
+
+`reopen_task()` / `cmd_reopen()` is the reference implementation — study it
+before adding your first command.
+
+**Data flow:**
+
+```
+GTDEMO_STORE env var
+       │
+       ▼
+load_tasks(path)          # JSON → list[Task]
+       │
+       ▼
+core function             # pure: list[Task] → list[Task] or Task
+       │
+       ▼
+save_tasks(path, tasks)   # list[Task] → JSON
+       │
+       ▼
+print(...)                # CLI output
+```
 
 ## Develop
 
 ```bash
-ruff check .     # lint
-pytest -q        # tests
+# Install dev dependencies
+pip install -e ".[dev]"
+
+# Lint
+ruff check .
+
+# Format (auto-fix)
+ruff format .
+
+# Tests
+pytest -q
+
+# Fail fast, short tracebacks
+pytest -q --tb=short -x
 ```
 
-CI runs both on every push and pull request (see `.github/workflows/ci.yml`),
-so every change has to pass the same quality gates an agent would.
+CI (`.github/workflows/ci.yml`) runs `ruff check` then `pytest -q` on every
+push and pull request. Both must pass before merging.
 
-## Structure
+## Ideas to extend
 
-```
-src/gastown_demo/
-  core.py   # pure task logic + JSON store (well covered by tests)
-  cli.py    # thin argparse layer that calls into core
-tests/
-  test_core.py
-  test_cli.py
-```
+Good first contributions — each follows the three-step extension pattern above:
 
-The split is deliberate: business logic lives in `core` as pure functions, the
-CLI stays a thin shell. New behaviour is added by writing a function in `core`
-(with a test) and wiring a subcommand in `cli.build_parser`.
+| Feature | `core.py` change | `cli.py` change |
+|---------|-----------------|-----------------|
+| `remove <id>` | `remove_task()` modelled on `complete_task()` | `cmd_remove()` + `remove` subparser |
+| `--priority high` | add `priority` field to `Task`; update `add_task()` | `--priority` arg on `add`; sort in `cmd_list()` |
+| Due dates + `overdue` | add `due` field to `Task`; add `overdue_tasks()` filter | `overdue` subparser |
+| Tags + `list --tag` | add `tags: list[str]` to `Task` | `--tag` arg on `list` subparser |
+| `search <text>` | `search_tasks()` substring match on `task.title` | `search` subparser |
+| Markdown export | `export_markdown()` returns a string | `export` subparser; print to stdout |
+| Coloured output | no change | wrap output in ANSI codes in `cmd_list()` |
 
-## Ideas to extend (good first beads)
-
-- `done`-state already exists; add a `reopen` command — already implemented: see `reopen_task()` in `core.py` and `cmd_reopen()` in `cli.py`; study these as the pattern for adding new commands
-- `remove <id>` to delete a task — add `remove_task()` in `core.py` (modelled on `complete_task()`), then wire `cmd_remove()` and a `remove` subparser in `cli.build_parser()`
-- priorities (`--priority high`) and sort `list` by them — add a `priority` field to the `Task` dataclass in `core.py`, update `add_task()` to accept it, and sort by priority in `cmd_list()` in `cli.py`
-- due dates and an `overdue` view — add a `due` field to the `Task` dataclass in `core.py`; add an `overdue_tasks()` filter there, then wire an `overdue` subparser in `cli.build_parser()`
-- tags and `gtdemo list --tag <name>` — add a `tags: list[str]` field to `Task` in `core.py`; filter by tag in `cmd_list()` and add a `--tag` argument to the `list` subparser in `cli.build_parser()`
-- `search <text>` across titles — add `search_tasks()` in `core.py` (substring match on `task.title`), then wire `cmd_search()` and a `search` subparser in `cli.build_parser()`
-- export to Markdown — add `export_markdown()` in `core.py`, then wire `cmd_export()` and an `export` subparser in `cli.build_parser()`
-- colourised output — modify `cmd_list()` in `cli.py` to wrap output in ANSI codes or add `colorama` as a dependency; no changes to `core.py` needed
+Already implemented: `reopen` — see `reopen_task()` in `core.py` and
+`cmd_reopen()` in `cli.py`.
 
 ## Contributing
 
-### Report an issue
-
-Open a GitHub issue with a short description of the bug or feature request.
-Include the output of `gtdemo list` if relevant.
-
-### Set up for development
+### Set up
 
 ```bash
 git clone <repo-url>
 cd gastown-demo
+python -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 ```
 
-### Run tests locally
+### Workflow
 
-```bash
-ruff check .   # lint
-pytest -q      # tests
-```
+1. Create a branch: `git checkout -b my-feature`
+2. Implement — follow the three-step extension pattern above
+3. Add tests in `tests/` (required for new `core.py` functions)
+4. Run `ruff check . && pytest -q` — both must pass
+5. Open a pull request against `main` with a description of what changed and why
 
-Both gates must pass before submitting a pull request — CI enforces the same
-checks on every push.
+### Code conventions
 
-### Open a pull request
+- `ruff` enforces style; run `ruff format .` to auto-format
+- Line length: 100 characters (set in `pyproject.toml`)
+- Core functions take a `list[Task]` as the first argument; no `print` in `core.py`
+- New functions get a single-line docstring matching the existing style
+- CLI handlers return `int` exit codes (0 = success)
 
-1. Fork the repo and create a branch (`git checkout -b my-feature`).
-2. Make your changes with tests where appropriate.
-3. Run `ruff check .` and `pytest -q` and confirm both pass.
-4. Open a pull request against `main` with a clear description of what changed
-   and why.
+### Filing bugs
+
+Open a GitHub issue with the output of `gtdemo list` if relevant.
 
 ## License
 
