@@ -4,6 +4,9 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/gastown-demo.svg)](https://pypi.org/project/gastown-demo/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/gastown-demo.svg)](https://pypi.org/project/gastown-demo/)
+[![GitHub stars](https://img.shields.io/github/stars/ingo-eichhorst/gastown-demo.svg?style=social&label=Stars)](https://github.com/ingo-eichhorst/gastown-demo/stargazers)
 
 A task manager you can start using in 30 seconds, right from your terminal.
 
