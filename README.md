@@ -15,6 +15,23 @@ It's also the demo codebase for the [Gas Town](https://github.com/universalagent
 
 ---
 
+## Willkommen, betterCode()-Teilnehmer!
+
+Schön, dass ihr hier seid! Dieses Repository ist das Demo-Projekt zum Gas-Town-Vortrag auf der betterCode() Konferenz — ihr habt live verfolgt, wie KI-Agenten es Stück für Stück weiterentwickeln.
+
+**Was euch erwartet:** `gastown-demo` ist bewusst klein gehalten: ein schlichter Aufgaben-Manager für die Kommandozeile, den ihr in zehn Minuten vollständig lesen könnt. Genau das macht ihn zum idealen Spielplatz für autonome Coding-Agenten. Das **Gas Town**-System zerlegt Features in Issues (sogenannte Beads), weist sie koordinierten Polecat-Agenten zu und führt ihre Änderungen über eine Merge Queue zusammen — alles ohne manuellen Eingriff.
+
+**So könnt ihr selbst experimentieren:**
+
+1. **Repository klonen** und die Commit-Historie erkunden — jeder Commit stammt von einem Agenten.
+2. **`gtdemo` installieren** (s. Quickstart unten) und die Befehle direkt ausprobieren.
+3. **Ein eigenes Feature einbauen** nach dem Drei-Schritt-Muster im Abschnitt *Architecture* — `reopen_task()` dient als Referenz-Implementierung.
+4. **Gas Town selbst erkunden:** [github.com/universalagents/gastown](https://github.com/universalagents/gastown)
+
+Viel Spaß beim Stöbern und Ausprobieren!
+
+---
+
 ## Quickstart
 
 **Install** (Python 3.10+ required):
