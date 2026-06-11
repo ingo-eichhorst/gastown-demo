@@ -15,6 +15,34 @@ It's also the demo codebase for the [Gas Town](https://github.com/universalagent
 
 ---
 
+## Für Entwickler: betterCode()-Edition
+
+Willkommen! Dieses Repository ist das Live-Demo-Projekt aus dem Gas Town-Talk — bewusst klein gehalten, aber sorgfältig strukturiert.
+
+### Was der Code zeigt
+
+Die wichtigste Entscheidung steckt in der Aufteilung: `core.py` enthält ausschließlich reine Funktionen ohne Seiteneffekte, `cli.py` ist der dünne Adapter nach außen. Dieses Pattern macht den Code nicht nur testbar, sondern auch für KI-Agenten besonders gut handhabbar — jede Funktion hat klar definierte Ein- und Ausgaben, kein versteckter Zustand.
+
+Schau dir `reopen_task()` in `core.py` und `cmd_reopen()` in `cli.py` an: das ist die Referenz-Implementierung für alle neuen Commands. Drei Schritte, keine Ausnahmen.
+
+### Interessante Patterns
+
+- **Pure-core / impure-shell**: Logik ohne Seiteneffekte lässt sich trivial testen und von mehreren Agenten parallel bearbeiten — kein Lock-Contention, kein geteilter Zustand.
+- **Dataclass als Domain-Objekt**: `Task` ist ein einfaches Dataclass, kein ORM-Overhead, direkt JSON-serialisierbar. Agenten können das Schema lesen und sofort mit der Struktur arbeiten.
+- **Testpyramide in Miniatur**: `test_core.py` testet reine Logik, `test_cli.py` treibt die echte CLI durch `main()`. Beide Schichten unabhängig testbar — ideal, wenn ein Agent nur eine Schicht anfasst.
+
+### Als Spielwiese für eigene Agenten nutzen
+
+Das Projekt ist absichtlich klein genug, um vollständig in den Kontext eines LLM zu passen, aber strukturiert genug für echte Änderungen:
+
+1. **Neuen Command implementieren** — folge dem Drei-Schritte-Muster aus dem Architecture-Abschnitt. Das ist der einfachste Einstieg.
+2. **Constraints erkunden** — was passiert, wenn `core.py` als „kein Print"-Zone enforced wird? Wie reagieren Agenten auf Ruff-Fehler? Das Projekt hat Quality Gates, die Feedback geben.
+3. **Gas Town ausprobieren** — fork das Repo, starte einen lokalen Gas Town-Rig, und beobachte, wie autonome Worker-Agenten (Polecats) Features aus dem Backlog abarbeiten.
+
+Der Code ist das Skript. Die Agenten spielen die Rollen.
+
+---
+
 ## Quickstart
 
 **Install** (Python 3.10+ required):
