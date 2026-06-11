@@ -15,6 +15,42 @@ It's also the demo codebase for the [Gas Town](https://github.com/universalagent
 
 ---
 
+## Für Entwickler: betterCode()-Edition
+
+Willkommen, betterCode()-Teilnehmer! Du hältst gerade das Codebase in den Händen, mit dem der Gas Town Talk live demonstriert wurde.
+
+### Was sich lohnt zu studieren
+
+Dieses Repo ist absichtlich klein — aber strukturell nicht trivial:
+
+**Clean Architecture im Miniformat.** `core.py` enthält ausschließlich pure Funktionen ohne I/O, `cli.py` ist der dünne Adapter nach außen. Das Muster skaliert, weil du `core.py` isoliert testen kannst — kein Mocking, kein Aufwand.
+
+**Agent-freundlicher Code by design.** Die Drei-Schritte-Erweiterung (core function → test → CLI handler) ist so strukturiert, dass ein Coding-Agent präzise weiß, was zu tun ist. Kein Raten, kein „wo fange ich an?" — das ist kein Zufall, sondern Absicht.
+
+**Tests als Sicherheitsnetz für Agenten.** `test_core.py` testet pure Funktionen direkt, `test_cli.py` treibt die CLI durch `main()`. Wenn ein Agent Code ändert und die Tests grün bleiben, ist die Änderung mit hoher Wahrscheinlichkeit korrekt — auch ohne manuelle Code-Review.
+
+### Als Spielwiese für eigene Agenten-Experimente
+
+| Experiment | Einstiegspunkt |
+|------------|----------------|
+| Ersten Agenten laufen lassen | Nimm ein Feature aus der "Ideas to extend"-Tabelle und lass einen Agenten es implementieren |
+| Referenzmuster studieren | `reopen_task()` in `core.py` + `cmd_reopen()` in `cli.py` — das ist die Blaupause |
+| Gas Town ausprobieren | Klone [Gas Town](https://github.com/universalagents/gastown) und schick einen Agenten-Schwarm auf dieses Repo |
+| Robustheit testen | Beobachte: Wie viele Iterationen braucht ein Agent? Wo stolpert er? Das sind die interessanten Fragen |
+
+### Muster, die sich übertragen lassen
+
+| Muster | Wo | Warum es für Agenten wichtig ist |
+|--------|----|----------------------------------|
+| Pure functions + I/O-Trennung | `core.py` vs. `cli.py` | Agenten können Logik testen ohne Seiteneffekte |
+| Referenzimplementierung als Beispiel | `reopen_task()` | Agenten brauchen ein konkretes Beispiel, keine Doku |
+| Exit-Codes als expliziter Vertrag | Rückgabewerte in `cli.py` | Agenten können Erfolg/Fehler zuverlässig unterscheiden |
+| Konfiguration per Umgebungsvariable | `GTDEMO_STORE` | Agenten können Stores isolieren, ohne sich gegenseitig zu stören |
+
+Viel Spaß beim Experimentieren — und falls du Gas Town produktiv einsetzt oder Fragen hast, freuen wir uns über Feedback!
+
+---
+
 ## Quickstart
 
 **Install** (Python 3.10+ required):
