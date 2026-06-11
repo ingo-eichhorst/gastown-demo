@@ -15,6 +15,29 @@ It's also the demo codebase for the [Gas Town](https://github.com/universalagent
 
 ---
 
+## Willkommen, betterCode()-Teilnehmer!
+
+Schön, dass ihr dabei seid! Ihr habt gerade den Gas Town Talk erlebt — dieses Repository ist das Demo-Projekt, das live auf der Bühne zum Einsatz kam.
+
+**Was euch hier erwartet:**
+
+`gastown-demo` ist ein bewusst einfach gehaltener Terminal-Taskmanager. Er ist klein genug, um ihn in 10 Minuten vollständig zu verstehen, aber strukturiert genug, damit KI-Coding-Agenten selbstständig neue Features ergänzen können — mit Tests und Quality Gates, die bereits fertig eingerichtet sind.
+
+**Warum ist das für euch interessant?**
+
+Das Projekt zeigt, wie autonome Agenten (sogenannte *Polecats*) in einer koordinierten Umgebung an einem realen Codebase zusammenarbeiten: Feature-Requests landen als Tickets im System, Agenten implementieren sie auf Feature-Branches, und ein automatisierter Merge-Prozess prüft und integriert die Änderungen nach bestandenem CI. Ihr habt eben live gesehen, wie das in der Praxis aussieht.
+
+**Wie ihr damit experimentieren könnt:**
+
+1. **Paket lokal installieren:** `pip install -e ".[dev]"`
+2. **Das Tool ausprobieren:** `gtdemo add "meine erste Aufgabe"` — und dann mit `gtdemo list`, `gtdemo done 1` weiterarbeiten
+3. **Ein Feature selbst umsetzen:** Die Tabelle unter *Ideas to extend* beschreibt Erweiterungen, die alle demselben einfachen Dreischritt-Muster folgen
+4. **Einen Agenten beauftragen:** Gebt einem Coding-Agenten eurer Wahl denselben Task und beobachtet, wie er den Code liest, die Tests ergänzt und einen Pull Request öffnet
+
+Das Repo ist ausdrücklich offen für Beiträge — wenn ihr etwas Spannendes gebaut habt, freuen wir uns über einen Pull Request!
+
+---
+
 ## Quickstart
 
 **Install** (Python 3.10+ required):
